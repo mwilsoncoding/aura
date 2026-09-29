@@ -16,6 +16,11 @@ All goals are planned, but feasibility may vary per goal. This list may change o
 - Having fun
 - Exploring
 - Compiler
+- Modules
+- Functions
+- Args
+- Compile-time macros
+- Build system
 - Perceus reference counting
 - BEAM / OTP / Actor model style concurrency
   - actors are aura-processes
