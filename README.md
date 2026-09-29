@@ -50,5 +50,6 @@ All goals are planned, but feasibility may vary per goal. This list may change o
 
 ## Non-Goals
 
+- Backward compatibility (yet)
 - Market penetration
 - Production support (in any capacity, whatsoever)
