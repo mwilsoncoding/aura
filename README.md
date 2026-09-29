@@ -18,6 +18,10 @@ All goals are planned, but feasibility may vary per goal. This list may change o
 - Koka-style effect handling system
 - BEAM / OTP / Actor model style concurrency
 - Transactional memory
+- Memory safety
+- JIT compilation
+- REPL
+- Support for scripting in-the-language
 - Parallel compilation
 - Non-blocking IO
 - Pipe operator support

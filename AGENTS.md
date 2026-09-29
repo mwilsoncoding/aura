@@ -4,6 +4,12 @@
 
 Treat [README.md](README.md) as the source of truth for Aura's goals and non-goals. Aura is an exploratory language and compiler project; its stated influences are BEAM/OTP, Perceus reference counting, Koka effect handling, Elixir-like set-theoretic types, and Verse. Treat those influences as research leads, not settled design requirements. Make unresolved tradeoffs explicit before turning them into implementation constraints.
 
+In the following priority order:
+
+1. Make it work.
+2. Make it fast.
+3. Make it readable.
+
 ## Workflow
 
 - Use a dedicated git worktree for each independent agent or sub-agent task that needs a separate checkout. Prefer worktrees over switching branches in a shared checkout, so parallel work does not overwrite or disturb the human's or another agent's state. Check `git worktree list` before creating one, and leave other worktrees and their changes untouched.
