@@ -1,0 +1,26 @@
+# BEAM/OTP Process and Failure Semantics
+
+**Scope.** This report summarizes Erlang/OTP process semantics relevant to Aura's stated interest in actor-style concurrency. It distinguishes Erlang runtime behavior from OTP supervision policy and from implications for Aura. The primary references are the official [Erlang Reference Manual: Processes](https://www.erlang.org/doc/system/ref_man_processes.html), [OTP Design Principles](https://www.erlang.org/doc/system/design_principles.html), and [stdlib Supervisor Behaviour](https://www.erlang.org/doc/apps/stdlib/supervisor.html). The implementation reference is the version-pinned [OTP 27.3 `supervisor.erl`](https://github.com/erlang/otp/blob/OTP-27.3/lib/stdlib/src/supervisor.erl).
+
+## Runtime semantics
+
+- **Processes and mailboxes.** An Erlang process is a lightweight runtime entity with its own execution state and mailbox; processes communicate by sending messages rather than by directly sharing process state. A receive expression selects a matching message from the mailbox, so mailbox arrival order and the order in which a program handles messages are distinct concepts. [Processes reference manual](https://www.erlang.org/doc/system/ref_man_processes.html)
+- **Sending and delivery.** Sending with `!` is asynchronous: the sender does not wait for the receiver to handle the message, and the send expression evaluates to the message. Erlang guarantees signal ordering from one sender to one destination, but this is not an acknowledgement or a guarantee that a receiver will process a message. A message sent to a process that has already terminated is discarded. The distributed system also cannot promise delivery across node failure or disconnection; applications needing confirmation must implement a protocol above send. [Processes reference manual](https://www.erlang.org/doc/system/ref_man_processes.html)
+- **Links.** `link/1` establishes a bidirectional relationship: a non-normal exit signal from either linked process normally terminates the other with the same reason. A process that traps exits instead receives an `{'EXIT', From, Reason}` message, allowing it to handle the linked process's failure. Normal exit signals do not normally propagate as failures; `kill` is untrappable and is observed by linked processes as reason `killed`. Linking couples failure; it is not a restart policy. [Processes reference manual](https://www.erlang.org/doc/system/ref_man_processes.html)
+- **Monitors.** `monitor/2` creates a one-way observation relationship. When the monitored process terminates, the monitoring process receives a `{'DOWN', Ref, process, Object, Reason}` message; the monitored process is not affected. A monitor therefore reports termination without propagating it. [Processes reference manual](https://www.erlang.org/doc/system/ref_man_processes.html)
+
+## OTP supervision: policy above the primitives
+
+Supervision is an OTP library behavior, not an additional process primitive or an automatic property of every linked process. A supervisor starts and manages children from child specifications, receives their exit information, and applies a configured restart strategy. OTP defines child restart types (`permanent`, `transient`, `temporary`), restart strategies for groups of children, shutdown behavior, and restart-intensity limits; exceeding the configured restart intensity causes the supervisor itself to terminate. These are explicit OTP policies built around process exits and links, rather than guarantees made by sending a message or creating a process. [Supervisor Behaviour](https://www.erlang.org/doc/apps/stdlib/supervisor.html), [OTP Design Principles](https://www.erlang.org/doc/system/design_principles.html), [OTP 27.3 supervisor source](https://github.com/erlang/otp/blob/OTP-27.3/lib/stdlib/src/supervisor.erl)
+
+## Relevance to Aura
+
+The BEAM/OTP model offers useful distinctions for Aura's design exploration, not a requirement to copy OTP:
+
+1. Specify whether process state is isolated and whether communication crosses that boundary only by messages.
+2. State the send contract precisely: asynchronous delivery, sender-to-recipient ordering (if adopted), behavior for a dead recipient, and whether delivery/handling acknowledgements are a separate protocol. Do not describe a bare send as reliable delivery.
+3. Keep failure coupling (`link`-like propagation) distinct from failure observation (`monitor`-like notification); decide whether either is a language/runtime primitive.
+4. Treat restart and shutdown rules as supervision policy: define restart classification, restart scope, intensity limits, and how supervisors themselves fail. Do not infer those policies merely from process creation or linking.
+5. If Aura includes distribution, specify node-loss and partition semantics separately from local-process semantics.
+
+These are decision points for Aura, not recommendations to adopt BEAM's exact behavior. The guarantees above describe Erlang/OTP; whether Aura should match them remains open.
