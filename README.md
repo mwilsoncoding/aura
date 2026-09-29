@@ -20,12 +20,19 @@ All goals are planned, but feasibility may vary per goal. This list may change o
 - Koka-style effect handling system
 - BEAM / OTP / Actor model style concurrency
 - Behaviours
+  - Message-based dispatch contracts
+  - Modules that encode actors (which respond to messages) can implement behaviours
 - Transactional memory
 - Memory safety
 - JIT compilation
 - REPL
 - Protocols
+  - Value-based dispatch contracts
+  - Struct modules (modules that define structs) can implement protocols
 - Interfaces
+  - Module-based dispatch contracts
+  - All modules can implement interfaces
+- Units of measure
 - Support for scripting in-the-language
 - Parallel compilation
 - Non-blocking IO
