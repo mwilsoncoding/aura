@@ -1,5 +1,7 @@
 # Aura
 
+The BEAM, if it were reference counted and had an effect system.
+
 An idea borne out of the following key influences: 
 
 - Erlang BEAM / OTP
@@ -17,10 +19,13 @@ All goals are planned, but feasibility may vary per goal. This list may change o
 - Perceus reference counting
 - Koka-style effect handling system
 - BEAM / OTP / Actor model style concurrency
+- Behaviours
 - Transactional memory
 - Memory safety
 - JIT compilation
 - REPL
+- Protocols
+- Interfaces
 - Support for scripting in-the-language
 - Parallel compilation
 - Non-blocking IO
