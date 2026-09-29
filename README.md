@@ -39,6 +39,7 @@ All goals are planned, but feasibility may vary per goal. This list may change o
 - Pipe operator support
 - Functional syntax
 - Elixir-like set-theoretical types
+- Lexical scoping
 
 ### Stretch Goals
 
