@@ -6,6 +6,7 @@ Treat [README.md](README.md) as the source of truth for Aura's goals and non-goa
 
 ## Workflow
 
+- Use a dedicated git worktree for each independent agent or sub-agent task that needs a separate checkout. Prefer worktrees over switching branches in a shared checkout, so parallel work does not overwrite or disturb the human's or another agent's state. Check `git worktree list` before creating one, and leave other worktrees and their changes untouched.
 - Use [`/wayfinder`](.agents/skills/wayfinder/SKILL.md) early and often for substantial, exploratory, or multi-session work. Keep its map and decision tickets on the configured issue tracker, and resolve decisions before treating the route as implementation-ready. Follow the skill's one-ticket-per-session rule.
 - Use [`/grill-me`](.agents/skills/grill-me/SKILL.md) when ambiguity in scope, semantics, or design could change the direction of the work. Clarify that ambiguity before committing it to a Wayfinder decision or implementation.
 - Use [`/gh`](.agents/skills/gh/SKILL.md) for GitHub-hosted context and operations. `gh` is available in the devcontainer/Codespaces environment; establish the repository and authentication context before repository-scoped operations, and verify mutations.
