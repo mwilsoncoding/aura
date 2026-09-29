@@ -27,6 +27,7 @@
       "ghcr.io/devcontainers/features/github-cli": {},
       "ghcr.io/devcontainers/features/node": {},
       "ghcr.io/devcontainers/features/git-lfs": {},
+      "ghcr.io/devcontainers-extra/features/ripgrep": {},
       "ghcr.io/devcontainers-extra/features/shellcheck": {}
     }
 
