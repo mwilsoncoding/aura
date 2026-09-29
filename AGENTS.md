@@ -23,3 +23,17 @@ Use these sources to compare behavior and design; record which version or revisi
 - [Perceus: Garbage Free Reference Counting with Reuse](https://arxiv.org/abs/2004.03570)
 - [Semantic Subtyping](https://doi.org/10.1145/1040305.1040316), a foundation for reasoning about set-theoretic types
 - [Set-theoretic types research by Giuseppe Castagna](https://www.irif.fr/~gc/)
+
+## Agent skills
+
+### Issue tracker
+
+Issues live in GitHub Issues. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Use the default triage labels. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Use the single-context layout. See `docs/agents/domain.md`.
