@@ -5,8 +5,11 @@ An idea borne out of the following key influences:
 - Erlang BEAM / OTP
 - Perceus reference counting
 - Koka effect handling
+- Verse
 
 ## Goals
+
+All goals are planned, but feasibility may vary per goal. This list may change over time.
 
 - Having fun
 - Exploring
@@ -14,6 +17,8 @@ An idea borne out of the following key influences:
 - Perceus reference counting
 - Koka-style effect handling system
 - BEAM / OTP / Actor model style concurrency
+- Transactional memory
+- Parallel compilation
 - Non-blocking IO
 - Pipe operator support
 - Functional syntax
@@ -21,6 +26,9 @@ An idea borne out of the following key influences:
 
 ### Stretch Goals
 
+- BEAM
+- CLR
+- JVM
 - LLVM
 - WASM
 

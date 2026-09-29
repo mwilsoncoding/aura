@@ -2,7 +2,7 @@
 
 ## Project direction
 
-Treat [README.md](README.md) as the source of truth for Aura's goals and non-goals. Aura is an exploratory language and compiler project; its stated influences are BEAM/OTP, Perceus reference counting, Koka effect handling, and Elixir-like set-theoretic types. Treat those influences as research leads, not settled design requirements. Make unresolved tradeoffs explicit before turning them into implementation constraints.
+Treat [README.md](README.md) as the source of truth for Aura's goals and non-goals. Aura is an exploratory language and compiler project; its stated influences are BEAM/OTP, Perceus reference counting, Koka effect handling, Elixir-like set-theoretic types, and Verse. Treat those influences as research leads, not settled design requirements. Make unresolved tradeoffs explicit before turning them into implementation constraints.
 
 ## Workflow
 
@@ -24,6 +24,7 @@ Use these sources to compare behavior and design; record which version or revisi
 - [Perceus: Garbage Free Reference Counting with Reuse](https://arxiv.org/abs/2004.03570)
 - [Semantic Subtyping](https://doi.org/10.1145/1040305.1040316), a foundation for reasoning about set-theoretic types
 - [Set-theoretic types research by Giuseppe Castagna](https://www.irif.fr/~gc/)
+- [Verse language book](https://verselang.github.io/book/00_overview/)
 
 ## Agent skills
 
