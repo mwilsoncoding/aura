@@ -87,28 +87,34 @@ A clock whose readings correspond to externally meaningful wall time. Its readin
 A clock whose readings do not move backward and are used to measure elapsed time or deadlines. Its readings have no civil-time origin.
 
 **Clock effect**:
-A typed effect through which a computation requests a reading from the system clock or the monotonic clock.
+A typed effect through which a computation requests a system or monotonic instant; clock reads return the instant directly. Recoverable time-zone database and conversion errors are returned as `Result` values.
 
 **System instant**:
-An absolute system-clock point canonically represented as a UTC-epoch value. It can be compared or subtracted only with another system instant; a named time zone is separate data.
+An absolute system-clock point represented as an arbitrary-precision integer nanosecond count from the Unix epoch using POSIX time; leap seconds are not represented as distinct instants. It can be compared or subtracted only with another system instant; a named time zone is separate data.
 
 **Monotonic instant**:
-A runtime-local monotonic-clock point used for elapsed time and deadlines, not civil timestamps. It can be compared or subtracted only with another monotonic instant from the same runtime and is not portable across runtimes.
+A runtime-local monotonic-clock point represented as an arbitrary-precision integer nanosecond count, used for elapsed time and deadlines rather than civil timestamps. It can be compared or subtracted only with another monotonic instant from the same runtime and is not portable across runtimes.
 
 **Duration**:
-A signed time span represented at nanosecond granularity; this precision does not promise nanosecond clock accuracy. Adding a duration to an instant preserves its clock domain; subtracting same-domain instants yields a duration.
+A signed fixed span of elapsed time represented as an arbitrary-precision integer nanosecond count; this precision does not promise nanosecond clock accuracy. Adding a duration to an instant preserves its clock domain; subtracting same-domain instants yields a duration.
+
+**Calendar period**:
+A span of calendar units applied to a civil date-time in an explicit time zone, rather than a fixed elapsed-time span. Month/year shifts clamp an invalid day to the target month's last valid day; applying a period can encounter a gap or fold and therefore yields a local-time resolution.
 
 **Time zone**:
 A named set of civil-time rules that maps local date-times to offsets or instants over time. A fixed UTC offset alone is not a time zone.
 
 **Time-zone database**:
-A provider of transition rules for named time zones. Aura's time API specifies an interface for this data; its implementation and data source remain open.
+A provider of transition rules for named time zones, passed explicitly to conversions and calendar operations. When omitted through a default argument, the provider is UTC-only; its implementation and non-UTC data source remain open.
 
 **Civil date-time**:
 A local calendar date and clock time that does not identify an instant without an explicit time zone and daylight-saving resolution.
 
 **Local-time resolution**:
 The result of interpreting a civil date-time in a named time zone: a unique instant, an ordered pair of earlier/later instants for a fold, or a gap with adjacent valid local date-times. Time-zone database failures are reported separately as `Result` values, and conversion does not silently choose an instant.
+
+**Virtual-time test handler**:
+A test handler that supplies clock readings and coordinates scheduler timers with virtual monotonic time. Advancing virtual time advances both clock domains by the same amount by default and fires due timers; tests may move system time independently to simulate clock corrections.
 
 ## Source and Execution
 
