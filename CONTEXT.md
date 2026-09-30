@@ -78,6 +78,26 @@ A scoped interpretation of selected effect operations. Aura handlers are deep an
 **State**:
 Mutable state available through an explicit effect and local to one Aura-process. Aura-processes do not share mutable state.
 
+## Time
+
+**System clock**:
+A clock whose readings correspond to externally meaningful wall time. Its readings may move forward or backward when the system clock is adjusted.
+
+**Monotonic clock**:
+A clock whose readings do not move backward and are used to measure elapsed time or deadlines. Its readings have no civil-time origin.
+
+**Clock effect**:
+A typed effect through which a computation requests a reading from the system clock or the monotonic clock.
+
+**System instant**:
+A point returned by the system clock, associated with externally meaningful wall time. It can be compared or subtracted only with another system instant.
+
+**Monotonic instant**:
+A point returned by the monotonic clock, used for elapsed-time and deadline calculations. It can be compared or subtracted only with another monotonic instant.
+
+**Duration**:
+A signed span of time. Adding a duration to an instant preserves that instant's clock domain; subtracting two instants in the same domain yields a duration.
+
 ## Source and Execution
 
 **Script file**:
