@@ -1,0 +1,47 @@
+# Time Zones, Arithmetic, and Clock Testing
+
+Research date: 2026-09-30. This report records primary-source guidance and prior art; the final section separates Aura-specific implications from source facts. Microsoft Learn and current Erlang/Elixir docs did not expose a single pinned release version in the fetched pages.
+
+## Microsoft .NET
+
+### Instants, offsets, zones, and storage
+
+- Microsoft's [choosing between `DateTime` and `DateTimeOffset`](https://learn.microsoft.com/en-us/dotnet/standard/datetime/choosing-between-datetime) guidance distinguishes UTC, local, and unspecified `DateTime` values from `DateTimeOffset`. A `DateTimeOffset` combines a date/time with an offset from UTC and identifies an unambiguous instant.
+- A UTC offset is not a time-zone identity: `DateTimeOffset` does not retain the named zone or its historical/future transition rules. A zone's offset can vary by date due to daylight-saving and political changes. Microsoft recommends retaining a time-zone identifier separately when the zone itself matters; see [choosing between the types](https://learn.microsoft.com/en-us/dotnet/standard/datetime/choosing-between-datetime) and [best practices](https://learn.microsoft.com/en-us/dotnet/standard/datetime/best-practices).
+- For timestamps that cross systems, Microsoft recommends UTC or `DateTimeOffset` rather than an unspecified/local `DateTime`; convert to local time for presentation. A civil appointment that must remain at a local wall time requires retaining the relevant zone identity as well as the local date/time.
+- `DateTime.Kind` has only `Utc`, `Local`, and `Unspecified` states; it is not a named-zone field. Conversion methods depend on this state, so `Unspecified` does not itself identify the source zone. See [DateTime and time-zone data](https://learn.microsoft.com/en-us/dotnet/standard/datetime/handling-ambiguous-times) and [best practices](https://learn.microsoft.com/en-us/dotnet/standard/datetime/best-practices).
+
+### Arithmetic and DST
+
+- The [arithmetic guidance](https://learn.microsoft.com/en-us/dotnet/standard/datetime/performing-arithmetic-operations) describes addition/subtraction on `DateTime` and `DateTimeOffset` as arithmetic on their date/time values; those operations do not automatically apply the transition rules of a named time zone. `DateTimeOffset.Add` preserves the value's offset instead of recalculating an offset from a time-zone rule set.
+- Therefore elapsed-time arithmetic should be performed on timeline instants (normally UTC): convert a zoned value to UTC, add/subtract a fixed duration, then convert back for display. By contrast, a calendar operation such as "same local time tomorrow" must be evaluated in the intended zone and can encounter a gap or fold. This distinction follows from Microsoft's arithmetic and zone-conversion guidance; it is not a special behavior of `DateTimeOffset`.
+- Microsoft's [ambiguous-time guidance](https://learn.microsoft.com/en-us/dotnet/standard/datetime/resolve-ambiguous-times) uses `TimeZoneInfo.IsAmbiguousTime` and `GetAmbiguousTimeOffsets` to identify a fall-back fold. Its sample explicitly chooses standard time; that is an example policy, not a universal requirement.
+- Microsoft's [invalid-time guidance](https://learn.microsoft.com/en-us/dotnet/standard/datetime/resolve-invalid-times) uses `TimeZoneInfo.IsInvalidTime` to identify a spring-forward gap. Its sample applies an adjustment, while callers may instead reject the input or require a user decision. A conversion API should make its policy explicit rather than silently treating every local time as a unique instant.
+
+### Clock providers and deterministic tests
+
+- [.NET `TimeProvider` overview](https://learn.microsoft.com/en-us/dotnet/standard/datetime/timeprovider-overview) describes a provider for UTC time, local time, high-frequency timestamps/elapsed-time measurement, and timers. Consumers can receive a provider rather than directly reading global time.
+- The [TimeProvider API](https://learn.microsoft.com/en-us/dotnet/api/system.timeprovider) exposes `GetUtcNow`, `GetLocalNow`, `GetTimestamp`, `GetElapsedTime`, `LocalTimeZone`, and `CreateTimer`. `GetTimestamp`/`GetElapsedTime` are for elapsed-time measurement, separate from wall-clock values.
+- Microsoft's [testing guidance](https://learn.microsoft.com/en-us/dotnet/core/extensions/timeprovider-testing) uses `FakeTimeProvider` from `Microsoft.Extensions.TimeProvider.Testing`. Tests can set or advance fake time and drive provider-created timers deterministically instead of waiting for real time. The provider can expose a test local zone, but time-zone transition rules remain zone-data behavior; a fake clock does not by itself test every OS clock or zone-database behavior. Static calls that bypass the injected provider are not controlled by it.
+
+## Erlang/OTP
+
+- [`erlang:system_time/0`](https://www.erlang.org/doc/apps/erts/erlang.html#system_time/0) returns system time in a chosen unit, while [`erlang:monotonic_time/0`](https://www.erlang.org/doc/apps/erts/erlang.html#monotonic_time/0) has an unspecified origin and is intended for differences/elapsed time, not a calendar timestamp. OTP's [time-correction guide](https://www.erlang.org/doc/apps/erts/time_correction.html) explains that system time may be corrected and that monotonic time is used for timers.
+- Erlang timer APIs and receive timeouts are relative to the monotonic clock; a timer can be delayed by scheduler/system load. Time-warp configuration affects runtime clock-correction behavior, but the public clock BIFs take no clock-provider argument. The documented BIF interface is not a general fake-clock injection API.
+- [`calendar:local_time_to_universal_time_dst/1`](https://www.erlang.org/doc/apps/stdlib/calendar.html#local_time_to_universal_time_dst/1) explicitly returns zero UTC candidates for a skipped local time, one for an ordinary local time, and two for an ambiguous repeated local time. Erlang's standard calendar conversion uses the runtime's local-time configuration; the function does not take an arbitrary named-zone identifier or a pluggable IANA database.
+
+## Elixir
+
+- [`System.system_time/1`](https://hexdocs.pm/elixir/System.html#system_time/1) and [`System.monotonic_time/1`](https://hexdocs.pm/elixir/System.html#monotonic_time/1) expose separate wall-clock and monotonic domains. [`Process.send_after/4`](https://hexdocs.pm/elixir/Process.html#send_after/4) is a process timer API; elapsed delays and timeouts use monotonic timing rather than civil wall time.
+- [`DateTime.add/4`](https://hexdocs.pm/elixir/DateTime.html#add/4) accepts a time-zone database for adding time to a zoned datetime. Fixed-duration seconds and calendar-sized units must not be treated as interchangeable around daylight-saving transitions; the database rules are needed to resolve the resulting local offset.
+- [`DateTime.from_naive/3`](https://hexdocs.pm/elixir/DateTime.html#from_naive/3) makes zone-conversion outcomes explicit: it may return `{:ok, datetime}`, `{:ambiguous, earlier, later}`, or `{:gap, before, after}`. The caller can choose a policy for folds/gaps instead of receiving an implicit choice.
+- [`Calendar.TimeZoneDatabase`](https://hexdocs.pm/elixir/Calendar.TimeZoneDatabase.html) is the behavior for timezone lookups. [`Calendar.UTCOnlyTimeZoneDatabase`](https://hexdocs.pm/elixir/Calendar.UTCOnlyTimeZoneDatabase.html) is the default and supports UTC only; named-zone support requires configuring another database implementation. Elixir's timezone-database hook is for zone rules, not for clock reads.
+- The listed public `System` and `Process` time APIs do not take a clock-provider argument. Elixir exposes a configurable timezone database, but not a parallel general-purpose fake clock/timer provider in these APIs. Tests needing deterministic reads can isolate clock access behind an application-owned module/function; this is an inference from the public API surface, not a documented testing mandate.
+
+## Aura-Specific Implications (Inference)
+
+- Keep `SystemInstant` and `MonotonicInstant` distinct. A persisted or interoperable system instant should have an agreed epoch/scale, while a monotonic point must remain process/runtime-local and should not be serialized as civil time.
+- UTC is a suitable canonical representation for instants and elapsed-duration arithmetic. If Aura must preserve a future local appointment, retain a local civil date/time and explicit named-zone identity separately; an offset alone cannot reproduce zone rules.
+- Model elapsed durations separately from calendar periods. Adding a fixed duration to an instant follows the timeline; advancing a civil schedule by one calendar day must consult zone rules and expose any gap/fold choice.
+- The accepted `Clock` effect gives tests a natural substitution point for both wall and monotonic reads. Deterministic timer behavior may need a separate relationship to scheduler/timer effects; a fake `now` value alone does not automatically advance scheduled messages or test real zone data.
+- The std-only Rust constraint makes named-zone data sourcing a distinct implementation concern. The language/API contract can define a timezone-database interface and its outcomes without yet choosing an external dependency or platform-data strategy.
