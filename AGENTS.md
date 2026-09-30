@@ -40,6 +40,10 @@ Use these sources to compare behavior and design; record which version or revisi
 
 Issues live in GitHub Issues. See `docs/agents/issue-tracker.md`.
 
+### Project board and milestones
+
+Use the [Aura project board](https://github.com/users/mwilsoncoding/projects/6) as the planning view. Keep the GitHub milestone field accurate for every Aura issue: assign the milestone when creating an issue and update it whenever the issue's scope or phase changes. The current milestone, `Aura v0.0.1 Specification`, covers the Wayfinder map and its decision tickets; implementation work belongs in a separate milestone once that phase is agreed. Keep any milestone shown on the project board consistent with the issue field.
+
 ### Triage labels
 
 Use the default triage labels. See `docs/agents/triage-labels.md`.
