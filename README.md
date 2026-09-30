@@ -16,6 +16,7 @@ All goals are planned, but feasibility may vary per goal. This list may change o
 - Having fun
 - Exploring
 - Compiler
+- Deep modules applied to language design: the language constructs and features should be deep.
 - Modules
 - Functions
 - Args
