@@ -14,7 +14,8 @@ In the following priority order:
 
 ## Workflow
 
-- Use a dedicated git worktree for each independent agent or sub-agent task that needs a separate checkout. Prefer worktrees over switching branches in a shared checkout, so parallel work does not overwrite or disturb the human's or another agent's state. Check `git worktree list` before creating one, and leave other worktrees and their changes untouched.
+- Give each agent task, including delegated research, its own git worktree so it cannot change the human's or another agent's checkout. Check `git worktree list` before creating one, and leave other worktrees and their changes untouched.
+- Research is complete when its findings are committed from that worktree and an open PR targeting `main` is created. Report the PR URL; if GitHub authentication or permissions block creation, report the blocker and leave the worktree and branch intact.
 - Use [`/wayfinder`](.agents/skills/wayfinder/SKILL.md) early and often for substantial, exploratory, or multi-session work. Keep its map and decision tickets on the configured issue tracker, and resolve decisions before treating the route as implementation-ready. Follow the skill's one-ticket-per-session rule.
 - Use [`/grill-me`](.agents/skills/grill-me/SKILL.md) when ambiguity in scope, semantics, or design could change the direction of the work. Clarify that ambiguity before committing it to a Wayfinder decision or implementation.
 - Use [`/gh`](.agents/skills/gh/SKILL.md) for GitHub-hosted context and operations. `gh` is available in the devcontainer/Codespaces environment; establish the repository and authentication context before repository-scoped operations, and verify mutations.
