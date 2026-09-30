@@ -23,6 +23,7 @@ Done when the repository, board, work scope, and requested outcome are unambiguo
 
 - Inspect the target milestone, its issues, dependencies, relevant project items, and linked pull requests before proposing changes.
 - Discover field names, types, options, and item membership from the live project schema. Map the requested estimated-start, estimated-completion, priority, and status concepts to the fields that actually exist.
+- The Aura board tracks `Estimated start`, `Estimated completion`, `Priority`, and `Status`; verify their live types and options before setting values.
 - Keep each GitHub issue's milestone assignment consistent with the milestone shown on the project board. Treat a milestone due date as a milestone-level target, separate from per-issue date forecasts.
 - If the board schema is inaccessible, report the access gap and request access or the field names; do not infer that a field is missing. If the estimated-start, estimated-completion, or requested priority field is absent from an accessible schema, ask the human to create it or confirm an existing field mapping, then re-read the schema before proceeding. Ask before any other board-schema change; do not guess field names or values.
 
@@ -40,7 +41,8 @@ Done when every in-scope issue is either ranked and grouped with a reason, or ex
 
 ### 4. Maintain the tracker
 
-- Make only the requested milestone, issue, and project-field changes. Do not change project schema or create milestones without explicit direction.
+- Make only the requested milestone, issue, and project-field changes. Do not change project field schema.
+- New issues may remain unmilestoned while their phase or future placement is unresolved. Triage each such issue into an appropriate milestone before work starts. The Project Manager may create a milestone when no existing milestone matches the agreed phase; leave its due date unset until a target is agreed.
 - Preserve the original estimate baseline when a forecast changes: record the previous dates, new forecast, change date, and reason in the issue history before replacing the current values. Distinguish that baseline from the latest forecast.
 - Apply the repository's milestone convention to every in-scope issue and keep the project-board milestone value in sync. Leave milestone due dates unset when no target date has been agreed.
 - Use `/gh` for mutations and read each changed issue or project item back to verify the intended values.
