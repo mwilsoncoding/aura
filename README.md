@@ -46,6 +46,12 @@ All goals are planned, but feasibility may vary per goal. This list may change o
   - Interfaces centered around modules
   - There is no restriction on the type of the first argument of functions declared in this type of interface
 - Transactional memory
+- Capture operator
+- Sigils
+- Pattern matching
+  - Pinning
+- Bitstrings
+- Binaries, strings, and charlists
 - Memory safety
 - JIT compilation
 - REPL
