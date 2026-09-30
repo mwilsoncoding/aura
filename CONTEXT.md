@@ -51,3 +51,8 @@ A scoped interpretation of selected effect operations. Aura handlers are deep an
 
 **State**:
 Mutable state available through an explicit effect and local to one Aura-process. Aura-processes do not share mutable state.
+
+## Source and Execution
+
+**Script file**:
+An Aura source file intended for direct execution without requiring a `main` entry point.
