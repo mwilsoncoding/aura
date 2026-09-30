@@ -90,13 +90,25 @@ A clock whose readings do not move backward and are used to measure elapsed time
 A typed effect through which a computation requests a reading from the system clock or the monotonic clock.
 
 **System instant**:
-A point returned by the system clock, associated with externally meaningful wall time. It can be compared or subtracted only with another system instant.
+An absolute system-clock point canonically represented as a UTC-epoch value. It can be compared or subtracted only with another system instant; a named time zone is separate data.
 
 **Monotonic instant**:
-A point returned by the monotonic clock, used for elapsed-time and deadline calculations. It can be compared or subtracted only with another monotonic instant.
+A runtime-local monotonic-clock point used for elapsed time and deadlines, not civil timestamps. It can be compared or subtracted only with another monotonic instant from the same runtime and is not portable across runtimes.
 
 **Duration**:
-A signed span of time. Adding a duration to an instant preserves that instant's clock domain; subtracting two instants in the same domain yields a duration.
+A signed time span represented at nanosecond granularity; this precision does not promise nanosecond clock accuracy. Adding a duration to an instant preserves its clock domain; subtracting same-domain instants yields a duration.
+
+**Time zone**:
+A named set of civil-time rules that maps local date-times to offsets or instants over time. A fixed UTC offset alone is not a time zone.
+
+**Time-zone database**:
+A provider of transition rules for named time zones. Aura's time API specifies an interface for this data; its implementation and data source remain open.
+
+**Civil date-time**:
+A local calendar date and clock time that does not identify an instant without an explicit time zone and daylight-saving resolution.
+
+**Local-time resolution**:
+The result of interpreting a civil date-time in a named time zone: a unique instant, an ordered pair of earlier/later instants for a fold, or a gap with adjacent valid local date-times. Time-zone database failures are reported separately as `Result` values, and conversion does not silently choose an instant.
 
 ## Source and Execution
 
