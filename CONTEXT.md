@@ -25,6 +25,15 @@ A named record type with nominal identity and declared fields. Struct values may
 
 ## Values and Types
 
+**Atom**:
+An immutable named scalar value; each literal, including `nil`, denotes a singleton value.
+
+**Tuple**:
+An immutable positional value with fixed arity.
+
+**List**:
+An immutable, proper, ordered sequence of values.
+
 **Ordinary value**:
 A value with immutable, value-based semantics and no observable reference identity. Equality and program-visible behavior depend on the value, not its storage identity.
 _Avoid_: pointer identity, object identity
@@ -40,6 +49,23 @@ A tagged value representing presence or absence. It is distinct from the `nil` a
 
 **Result**:
 An ordinary value representing success or recoverable failure. Returning a failure value does not itself fail or terminate an Aura-process.
+
+## Pattern Matching
+
+**Tuple pattern**:
+A positional pattern that matches a tuple of the specified arity.
+
+**List pattern**:
+A structural pattern over a proper list that observes its ordered elements.
+
+**Map pattern**:
+A pattern that requires its specified keys and permits additional map entries.
+
+**Record pattern**:
+A pattern over a structural record; the row determines whether unspecified fields are permitted.
+
+**Struct pattern**:
+A pattern that requires the nominal struct type and matches declared fields. Additional map fields do not affect the match.
 
 ## Effects and Memory
 
