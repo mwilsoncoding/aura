@@ -15,6 +15,7 @@ In the following priority order:
 ## Workflow
 
 - Give each agent task, including delegated research, its own git worktree so it cannot change the human's or another agent's checkout. Check `git worktree list` before creating one, and leave other worktrees and their changes untouched.
+- Before opening any PR from a worktree, fetch current `main`, rebase the worktree branch onto it, resolve any conflicts, and rerun affected checks. Submit only after the rebase completes cleanly and the checks pass.
 - Research is complete when its findings are committed from that worktree and an open PR targeting `main` is created. Report the PR URL; if GitHub authentication or permissions block creation, report the blocker and leave the worktree and branch intact.
 - Use [`/wayfinder`](.agents/skills/wayfinder/SKILL.md) early and often for substantial, exploratory, or multi-session work. Keep its map and decision tickets on the configured issue tracker, and resolve decisions before treating the route as implementation-ready. Follow the skill's one-ticket-per-session rule.
 - Use [`/grill-me`](.agents/skills/grill-me/SKILL.md) when ambiguity in scope, semantics, or design could change the direction of the work. Clarify that ambiguity before committing it to a Wayfinder decision or implementation.
