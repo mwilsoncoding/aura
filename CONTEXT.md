@@ -37,6 +37,9 @@ An immutable positional value with fixed arity.
 **List**:
 An immutable, proper, ordered sequence of values.
 
+**Stream**:
+A lazy, composable recipe for producing values incrementally, not a cached collection. Each traversal starts a fresh source run, repeating source effects. For asynchronous sources, value production is bounded by consumer demand.
+
 **Keyword list**:
 An ordered list of two-element tuples whose first element is an atom. Illustrative type descriptions include `[{atom, dynamic}]` and `list(tuple(atom, dynamic))`; no particular spelling or dedicated type has been decided, and the API remains open.
 
