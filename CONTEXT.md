@@ -28,6 +28,9 @@ A named record type with nominal identity and declared fields. Struct values may
 **Atom**:
 An immutable named scalar value; each literal, including `nil`, denotes a singleton value.
 
+**Unit**:
+A type with one value, returned when a computation has no meaningful payload. It is distinct from the `nil` atom and from success/status values such as `:ok`.
+
 **Tuple**:
 An immutable positional value with fixed arity.
 
