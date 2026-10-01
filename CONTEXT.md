@@ -34,6 +34,9 @@ An immutable positional value with fixed arity.
 **List**:
 An immutable, proper, ordered sequence of values.
 
+**Keyword list**:
+An ordered list of two-element tuples whose first element is an atom. Illustrative type descriptions include `[{atom, dynamic}]` and `list(tuple(atom, dynamic))`; no particular spelling or dedicated type has been decided, and the API remains open.
+
 **Ordinary value**:
 A value with immutable, value-based semantics and no observable reference identity. Equality and program-visible behavior depend on the value, not its storage identity.
 _Avoid_: pointer identity, object identity
